@@ -223,10 +223,10 @@ decapitalise (x:xs) = [toLower x] <> xs
 
 -- | Turn a list of path segments into a URL string
 psPathSegments :: [Segment] -> String
-psPathSegments = intercalate "/" . fmap psSegmentToStr
+psPathSegments = intercalate "/" . fmap (psSegmentToStr . _segment)
 
 -- | Turn an individual path segment into a PureScript variable handler
-psSegmentToStr :: Segment -> String
+psSegmentToStr :: SegmentType -> String
 psSegmentToStr (Static s) = s
 psSegmentToStr (Cap s)    = "\" <> encodeURIComponent " <> s <> " <> \""
 
@@ -247,4 +247,3 @@ psParamToStr qarg = "(if isJust " <> name
         Flag   -> "\"" <> name <> "=\""
         List   -> "\"" <> name <> "[]=\" <> encodeURIComponent (fromJust " <> name <> ")"
     name = qarg ^. argName
-
